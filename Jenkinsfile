@@ -31,8 +31,8 @@ pipeline {
                 sh '''
                     docker rm -f zap-scanner || true
                     docker volume rm zap_wrk || true
-                    docker run --name zap-scanner -u 0 -v zap_wrk:/zap/wrk -t zaproxy/zap-stable \
-                    zap-baseline.py -t "http://host.docker.internal:5000/hello?name=TEST" -r zap_report.html || true
+                    docker run --name zap-scanner --network container:securedev-prod -u 0 -v zap_wrk:/zap/wrk -t zaproxy/zap-stable \
+                    zap-baseline.py -t "http://localhost:5000/hello?name=TEST" -r zap_report.html || true
                     docker cp zap-scanner:/zap/wrk/zap_report.html ./zap_report.html
                     docker rm -f zap-scanner || true
                     docker volume rm zap_wrk || true
