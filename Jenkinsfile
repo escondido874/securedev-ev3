@@ -29,8 +29,11 @@ pipeline {
             steps {
                 echo 'Ejecutando escaneo DAST con OWASP ZAP sobre /hello...'
                 sh '''
-                    docker run --rm -v $(pwd):/zap/wrk/:rw -t zaproxy/zap-stable \
+                    docker rm -f zap-scanner || true
+                    docker run --name zap-scanner -u 0 -t zaproxy/zap-stable \
                     zap-baseline.py -t "http://host.docker.internal:5000/hello?name=TEST" -r zap_report.html || true
+                    docker cp zap-scanner:/zap/wrk/zap_report.html ./zap_report.html
+                    docker rm -f zap-scanner || true
                 '''
             }
         }
