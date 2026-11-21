@@ -5,6 +5,21 @@ app = Flask(__name__)
 
 @app.after_request
 def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = (
+        "default-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'"
+    )
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+    response.headers['Cross-Origin-Resource-Policy'] = 'same-origin'
+    response.headers['Server'] = 'SecureServer'
+    return response
+
+
+
+@app.after_request
+def add_security_headers(response):
     response.headers['Content-Security-Policy'] = "default-src 'self'"
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
